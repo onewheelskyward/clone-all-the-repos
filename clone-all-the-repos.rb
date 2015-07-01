@@ -6,12 +6,11 @@ require 'github_api'
 repos    = Github::Client::Repos.new auto_pagination: true
 response = repos.list user: 'mixpo'
 
-response.each_page do |page|
-  page.each do |repo|
-    if File.exists? repo.name
-      continue
-    else
-      exec "git clone git@github.com:mixpo/#{repo.name}"
-    end
+response.each do |repo|
+  puts "got #{repo.name}"
+  if File.exists? repo.name
+    next
+  else
+    system "git clone git@github.com:mixpo/#{repo.name}"
   end
 end
